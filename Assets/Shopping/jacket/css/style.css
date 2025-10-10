@@ -47,33 +47,122 @@ a {
 }
 
 /* Ini bagian hero image */
-.hero {
-  width: 88%;
-  margin: 90px auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60vh;
-  background-color: #fff;
-  border: 2px solid #e0e0e0;
+section {
+  margin-top: 90px !important;
 }
 
-.hero h1 {
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  font-weight: 300;
-  letter-spacing: 8px;
+.hero-card .bg-light {
+  background-color: #e6e6e6 !important;
+}
+
+.hero-title {
   font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.hero-desc {
+  color: #333;
+  font-size: 0.95rem;
+  max-width: 420px;
+}
+
+.hero-card hr {
+  width: 60px;
+  height: 2px;
+  background-color: #000;
+  border: none;
+  margin: 20px 0;
+}
+
+.hero-card button {
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  border-radius: 0;
+}
+
+.hero-image-wrapper {
+  padding: 0;
+  position: relative;
+  gap: 20px;
+}
+
+.hero-img-large {
+  height: 383.97px !important;
+  object-fit: cover;
+}
+
+.hero-img-small {
+  left: 30%;
+  position: absolute;
+  height: 70%;
+  object-fit: cover;
+  align-self: flex-end;
+}
+
+/* Bagian bawah grid */
+.unisex-section.container {
+  max-width: 89.5%;
+}
+
+.unisex-card {
+  background-color: #555;
+  overflow: hidden;
+}
+
+.img-fluid-1 {
+  max-width: 200px;
+  height: 163px;
+}
+
+.bottom-grid {
+  width: 90%;
+  margin: 30px auto 80px;
+}
+
+.text-1 {
+  margin-left: 30px;
+}
+
+.bottom-card p {
+  color: #555;
+}
+
+.bottom-card img {
+  width: 200px;
+  height: auto;
+  margin-top: 10px;
+}
+
+
+/* bagian filter */
+.section-container {
+  text-align: center;
+  margin: 80px auto 50px;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.section-filter {
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+.section-filter span {
+  margin: 0 5px;
+  font-weight: 600;
   color: #000;
 }
 
-.hero h1 span {
-  font-weight: 700;
-}
-
-.hero small {
-  font-size: 1rem;
-  vertical-align: super;
-  font-weight: 400;
+.section-filter .inactive {
+  color: #a0a0a0;
+  font-weight: 500;
 }
 
 /* Ini bagian produk */
@@ -140,7 +229,6 @@ select {
 }
 
 /* Kalao ini, bagian footer yaa kawan */
-
 footer {
   width: 88%;
   margin: auto;
@@ -232,40 +320,93 @@ footer ul li a:hover {
 
 
 /* Ini bagian responsive */
+@media (min-width: 1200px) {
+  .hero-section {
+    width: 80%;
+    height: 35vw;
+    padding: 80px 100px;
+  }
+
+
+  .hero-text h1 {
+    font-size: 5rem;
+  }
+
+  .hero-text p {
+    font-size: 1.1rem;
+  }
+
+  .hero-img-1 {
+    width: 200% !important;
+  }
+
+  .hero-img-2 {
+    width: 120%;
+    left: 120px;
+    top: 18%;
+  }
+}
+
+/* Batas Responsive */
 @media (max-width: 989px) {
 
   /* Navbar */
   .navbar {
     padding: 10px 50px;
     background-color: #fff !important;
-  }
 
   .navbar-nav {
-    margin-left: 0;
-    text-align: center;
+      margin-left: 0;
+      text-align: center;
+    }
+
+    .icon-group {
+      margin-top: 10px;
+      justify-content: center;
+    }
+
   }
 
-  .icon-group {
-    margin-top: 10px;
-    justify-content: center;
+  /* Heroimg ya */
+  .hero-img-large {
+    height: 407px !important;
   }
-
-  /* Hero */
-  .hero{
-    height: 40vh;
-  }
-
 }
 
-@media (max-width: 710px) {
-    /* Hero */
-    .hero{
-      height: 30vh;
-    }
+@media (max-width: 887px) {
 
-    .hero h1{
-      font-size: 2em;
-    }
+  /* Heroimg ya */
+  .hero-img-large {
+    height: 464px !important;
+  }
+}
+
+@media (max-width: 794px) {
+
+  /* Heroimg ya */
+  .hero-img-large {
+    height: 487px !important;
+  }
+}
+
+@media (max-width: 767px) {
+
+  /* Heroimg ya */
+  .hero-img-large {
+    height: 487px !important;
+  }
+
+  .hero-image-wrapper {
+    display: none;
+  }
+
+  .hero-img-large {
+    display: none;
+  }
+
+  .hero-img-small {
+    display: none;
+  }
 }
 
 @media (max-width: 576px) {
@@ -287,8 +428,27 @@ footer ul li a:hover {
   }
 
   /* Hero Image */
-  .hero h1 {
+  .hero-card .row {
+    flex-direction: column;
+  }
+
+  .hero-image-wrapper {
+    display: none;
+  }
+
+  .hero-img-large {
+    display: none;
+  }
+
+  .hero-img-small {
+    display: none;
+  }
+
+}
+
+@media (max-width: 576px) {
+  /* Hero */
+  h1.hero-title{
     font-size: 2rem;
-    letter-spacing: 4px;
   }
 }
