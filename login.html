@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+        }
+
+        .form-container {
+            padding: 50px 40px;
+        }
+
+        .form-container.hidden {
+            display: none;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+            font-size: 18px;
+            user-select: none;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 25px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .switch-form a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .dashboard {
+            display: none;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .dashboard.show {
+            display: block;
+        }
+
+        .dashboard h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .user-info p {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            margin-top: 20px;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .strength-meter {
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .strength-meter-fill {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Form Login -->
+        <div id="loginForm" class="form-container">
+            <h2>Selamat Datang</h2>
+            <p class="subtitle">Silakan login ke akun Anda</p>
+            
+            <div class="success-message" id="loginSuccess"></div>
+            
+            <form id="loginFormElement">
+                <div class="input-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="nama@email.com" required>
+                    <div class="error" id="loginEmailError"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="Masukkan password" required>
+                        <span class="toggle-password" onclick="togglePassword('loginPassword')">👁</span>
+                    </div>
+                    <div class="error" id="loginPasswordError"></div>
+                </div>
+                
+                <button type="submit" class="btn">Masuk</button>
+            </form>
+            
+            <div class="switch-form">
+                Belum punya akun? <a onclick="showRegister()">Daftar di sini</a>
+            </div>
+        </div>
+
+        <!-- Form Register -->
+        <div id="registerForm" class="form-container hidden">
+            <h2>Buat Akun Baru</h2>
+            <p class="subtitle">Daftar untuk memulai</p>
+            
+            <form id="registerFormElement">
+                <div class="input-group">
+                    <label for="registerName">Nama Lengkap</label>
+                    <input type="text" id="registerName" placeholder="Masukkan nama lengkap" required>
+                    <div class="error" id="registerNameError"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" placeholder="nama@email.com" required>
+                    <div class="error" id="registerEmailError"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="registerPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="registerPassword" placeholder="Minimal 8 karakter" required>
+                        <span class="toggle-password" onclick="togglePassword('registerPassword')">👁</span>
+                    </div>
+                    <div class="strength-meter">
+                        <div class="strength-meter-fill" id="strengthMeter"></div>
+                    </div>
+                    <div class="strength-text" id="strengthText"></div>
+                    <div class="error" id="registerPasswordError"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="registerConfirmPassword">Konfirmasi Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="registerConfirmPassword" placeholder="Ulangi password" required>
+                        <span class="toggle-password" onclick="togglePassword('registerConfirmPassword')">👁</span>
+                    </div>
+                    <div class="error" id="registerConfirmPasswordError"></div>
+                </div>
+                
+                <button type="submit" class="btn">Daftar</button>
+            </form>
+            
+            <div class="switch-form">
+                Sudah punya akun? <a onclick="showLogin()">Login di sini</a>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <h2>Dashboard</h2>
+            <div class="user-info">
+                <p><strong>Selamat datang!</strong></p>
+                <p>Nama: <span id="dashboardName"></span></p>
+                <p>Email: <span id="dashboardEmail"></span></p>
+                <p>Waktu Login: <span id="loginTime"></span></p>
+            </div>
+            <button class="btn logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Data pengguna tersimpan di memori
+        let users = [];
+        let currentUser = null;
+
+        // Toggle visibility password
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+
+        // Switch antara form
+        function showRegister() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        }
+
+        // Validasi email
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            const strengthMeter = document.getElementById('strengthMeter');
+            const strengthText = document.getElementById('strengthText');
+            
+            if (password.length >= 8) strength += 25;
+            if (password.match(/[a-z]+/)) strength += 25;
+            if (password.match(/[A-Z]+/)) strength += 25;
+            if (password.match(/[0-9]+/)) strength += 25;
+            
+            strengthMeter.style.width = strength + '%';
+            
+            if (strength <= 25) {
+                strengthMeter.style.background = '#e74c3c';
+                strengthText.textContent = 'Lemah';
+                strengthText.style.color = '#e74c3c';
+            } else if (strength <= 50) {
+                strengthMeter.style.background = '#f39c12';
+                strengthText.textContent = 'Sedang';
+                strengthText.style.color = '#f39c12';
+            } else if (strength <= 75) {
+                strengthMeter.style.background = '#3498db';
+                strengthText.textContent = 'Baik';
+                strengthText.style.color = '#3498db';
+            } else {
+                strengthMeter.style.background = '#2ecc71';
+                strengthText.textContent = 'Kuat';
+                strengthText.style.color = '#2ecc71';
+            }
+        }
+
+        // Event listener untuk password strength
+        document.getElementById('registerPassword').addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+
+        // Handle Register
+        document.getElementById('registerFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(err => err.classList.remove('show'));
+            
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            let hasError = false;
+            
+            // Validasi nama
+            if (name.length < 3) {
+                document.getElementById('registerNameError').textContent = 'Nama minimal 3 karakter';
+                document.getElementById('registerNameError').classList.add('show');
+                hasError = true;
+            }
+            
+            // Validasi email
+            if (!validateEmail(email)) {
+                document.getElementById('registerEmailError').textContent = 'Format email tidak valid';
+                document.getElementById('registerEmailError').classList.add('show');
+                hasError = true;
+            }
+            
+            // Cek email sudah terdaftar
+            if (users.find(u => u.email === email)) {
+                document.getElementById('registerEmailError').textContent = 'Email sudah terdaftar';
+                document.getElementById('registerEmailError').classList.add('show');
+                hasError = true;
+            }
+            
+            // Validasi password
+            if (password.length < 8) {
+                document.getElementById('registerPasswordError').textContent = 'Password minimal 8 karakter';
+                document.getElementById('registerPasswordError').classList.add('show');
+                hasError = true;
+            }
+            
+            // Validasi konfirmasi password
+            if (password !== confirmPassword) {
+                document.getElementById('registerConfirmPasswordError').textContent = 'Password tidak cocok';
+                document.getElementById('registerConfirmPasswordError').classList.add('show');
+                hasError = true;
+            }
+            
+            if (!hasError) {
+                // Simpan user
+                users.push({ name, email, password });
+                
+                // Show success message
+                const successMsg = document.getElementById('loginSuccess');
+                successMsg.textContent = 'Registrasi berhasil! Silakan login.';
+                successMsg.classList.add('show');
+                
+                // Reset form
+                this.reset();
+                document.getElementById('strengthMeter').style.width = '0';
+                document.getElementById('strengthText').textContent = '';
+                
+                // Pindah ke login
+                setTimeout(() => {
+                    showLogin();
+                    setTimeout(() => successMsg.classList.remove('show'), 3000);
+                }, 1500);
+            }
+        });
+
+        // Handle Login
+        document.getElementById('loginFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(err => err.classList.remove('show'));
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            let hasError = false;
+            
+            // Validasi email
+            if (!validateEmail(email)) {
+                document.getElementById('loginEmailError').textContent = 'Format email tidak valid';
+                document.getElementById('loginEmailError').classList.add('show');
+                hasError = true;
+            }
+            
+            // Cek kredensial
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (!user && !hasError) {
+                document.getElementById('loginPasswordError').textContent = 'Email atau password salah';
+                document.getElementById('loginPasswordError').classList.add('show');
+                hasError = true;
+            }
+            
+            if (!hasError && user) {
+                currentUser = user;
+                
+                // Tampilkan dashboard
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('dashboard').classList.add('show');
+                
+                // Set user info
+                document.getElementById('dashboardName').textContent = user.name;
+                document.getElementById('dashboardEmail').textContent = user.email;
+                document.getElementById('loginTime').textContent = new Date().toLocaleString('id-ID');
+                
+                // Reset form
+                this.reset();
+            }
+        });
+
+        // Handle Logout
+        function logout() {
+            currentUser = null;
+            document.getElementById('dashboard').classList.remove('show');
+            document.getElementById('loginForm').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
