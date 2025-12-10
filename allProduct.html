@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,10 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="Assets/Shopping/css/style.css">
 </head>
+
 <body>
 
-    <!-- Navbar kalo engga di scroll bg-white border-bottom -->
+  <!-- Navbar kalo engga di scroll bg-white border-bottom -->
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid d-flex align-items-center justify-content-between">
 
@@ -44,197 +46,27 @@
   <section class="product-section">
     <div class="section-header">
       <h5>ALL PRODUCT</h5>
-      <select>
-        <option>ALL PRODUCT</option>
-        <option>Jacket</option>
-        <option>T-Shirt</option>
-        <option>Accessories</option>
+      <select id="filterCategory">
+        <option value="all">ALL PRODUCT</option>
+        <option value="T-Shirt">T-Shirt</option>
+        <option value="Jacket">Jacket</option>
+        <option value="Shirt">Shirt</option>
+        <option value="Hoodie">Hoodie</option>
+        <option value="Crewneck">Crewneck</option>
+        <option value="Jeans">LongPants</option>
+        <option value="Shorts">Underwear</option>
       </select>
     </div>
 
-    <div class="row g-4" style="margin-bottom: 130px;">
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 1">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Work Jacket – Camo</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 2">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Grey</p>
-            <p class="price">Rp 550.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 3">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Denim</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 4">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Red</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 2">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Grey</p>
-            <p class="price">Rp 550.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 3">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Denim</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 4">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Red</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 2">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Grey</p>
-            <p class="price">Rp 550.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 3">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Denim</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 4">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Red</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 2">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Grey</p>
-            <p class="price">Rp 550.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 3">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Denim</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 4">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Red</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 2">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Grey</p>
-            <p class="price">Rp 550.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 3">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Denim</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-3">
-        <div class="product-card">
-          <img src="Assets/Shopping/img/jacket1.png" alt="Product 4">
-          <div class="product-info">
-            <h6>Shinning Bright</h6>
-            <p>Home Work Jacket – Red</p>
-            <p class="price">Rp 450.000</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="row g-4" id="productList" style="margin-bottom: 130px;"></div>
   </section>
 
+ 
   <!-- Ini footernyaa kawann -->
   <footer>
     <div class="container footer">
       <div class="row justify-content-between">
-        
+
         <div class="col-6 col-md-3 col-lg-2 mb-4">
           <h6>FEATURES</h6>
           <ul>
@@ -287,8 +119,8 @@
           <div class="store-info">
             <h6>STORE OFFLINE</h6>
             <p><strong>Tangerang Selatan</strong></p>
-            <p>Jl. Jombang Raya No.97, Pd. Pucung,  
-              Kec. Pd. Aren, Kota Tangerang Selatan,  
+            <p>Jl. Jombang Raya No.97, Pd. Pucung,
+              Kec. Pd. Aren, Kota Tangerang Selatan,
               Banten 15227</p>
           </div>
         </div>
@@ -297,5 +129,53 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="Assets/Shopping/js/data.js"></script>
+
+  <script>
+    const productList = document.getElementById("productList");
+    const filterCategory = document.getElementById("filterCategory");
+
+    renderProducts(products);
+
+    filterCategory.addEventListener("change", () => {
+      const category = filterCategory.value;
+
+      if (category === "all") {
+        renderProducts(products);
+      } else {
+        const filtered = products.filter(p => p.tag2.toLowerCase() === category.toLowerCase());
+        renderProducts(filtered);
+      }
+    });
+
+    function renderProducts(data) {
+      productList.innerHTML = "";
+
+      data.forEach(product => {
+        const card = document.createElement("div");
+        card.classList.add("col-6", "col-md-4", "col-lg-3");
+
+        card.innerHTML = `
+      <div class="product-card" onclick="goToDetail('${product.id}')">
+        <img src="${product.images[0]}" alt="${product.name}">
+        <div class="product-info">
+          <h6>${product.tag2}</h6>
+          <p>${product.name}</p>
+          <p class="price">Rp ${product.newPrice.toLocaleString()}</p>
+        </div>
+      </div>
+    `;
+
+        productList.appendChild(card);
+      });
+    }
+
+    function goToDetail(id) {
+      window.location.href = "detailProduct.html?id=" + id;
+    }
+
+  </script>
+
 </body>
+
 </html>

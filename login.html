@@ -3,36 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Register</title>
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #000;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            width: 100%;
-            max-width: 450px;
             position: relative;
         }
 
-        .form-container {
-            padding: 50px 40px;
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+
+        .form-panel {
+            padding: 48px 40px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .brand-logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .brand-logo span {
+            opacity: 0.7;
+        }
+
+        .brand-tagline {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .form-container.hidden {
@@ -40,45 +85,43 @@
         }
 
         h2 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
 
         .subtitle {
-            color: #666;
-            text-align: center;
-            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 32px;
             font-size: 14px;
         }
 
         .input-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             position: relative;
-        }
-
-        label {
-            display: block;
-            color: #555;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
         }
 
         input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 15px;
+            color: #fff;
             transition: all 0.3s ease;
             outline: none;
         }
 
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
         input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
         }
 
         .password-wrapper {
@@ -87,19 +130,22 @@
 
         .toggle-password {
             position: absolute;
-            right: 15px;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #999;
-            font-size: 18px;
-            user-select: none;
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .error {
-            color: #e74c3c;
+            color: #ff6b6b;
             font-size: 12px;
-            margin-top: 5px;
+            margin-top: 6px;
             display: none;
         }
 
@@ -110,98 +156,248 @@
         .btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #fff;
+            color: #000;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            margin-top: 8px;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 12px 24px rgba(255, 255, 255, 0.2);
         }
 
         .btn:active {
             transform: translateY(0);
         }
 
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-guest {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-guest:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 24px 0;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
         .switch-form {
             text-align: center;
-            margin-top: 25px;
-            color: #666;
+            margin-top: 24px;
+            color: rgba(255, 255, 255, 0.5);
             font-size: 14px;
         }
 
         .switch-form a {
-            color: #667eea;
+            color: #fff;
             text-decoration: none;
             font-weight: 600;
             cursor: pointer;
+            transition: opacity 0.3s ease;
         }
 
         .switch-form a:hover {
-            text-decoration: underline;
+            opacity: 0.8;
         }
 
         .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.2));
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            color: #2ecc71;
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
             display: none;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
         }
 
         .success-message.show {
             display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .dashboard {
             display: none;
-            padding: 50px 40px;
-            text-align: center;
         }
 
         .dashboard.show {
             display: block;
         }
 
-        .dashboard h2 {
-            color: #667eea;
-            margin-bottom: 20px;
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .welcome-header h2 {
+            margin-bottom: 4px;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px;
+            color: #fff;
         }
 
         .user-info {
-            background: #f8f9fa;
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            border-radius: 16px;
+            margin: 24px 0;
+        }
+
+        .user-info-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .user-info-item strong {
+            color: #fff;
+        }
+
+        .discount-card {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+            padding: 24px;
+            border-radius: 16px;
+            margin: 24px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discount-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 8s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .discount-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .discount-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .discount-code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 24px;
             border-radius: 10px;
-            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            letter-spacing: 4px;
+            color: #fff;
+            margin-top: 12px;
+            font-weight: 700;
         }
 
-        .user-info p {
-            margin: 10px 0;
-            color: #555;
+        .discount-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: #fff;
+            margin: 8px 0;
         }
 
-        .logout-btn {
-            background: #e74c3c;
-            margin-top: 20px;
-        }
-
-        .logout-btn:hover {
-            background: #c0392b;
+        .guest-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 12px;
         }
 
         .strength-meter {
-            height: 5px;
-            background: #e0e0e0;
-            border-radius: 3px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
             margin-top: 8px;
             overflow: hidden;
         }
@@ -213,118 +409,228 @@
         }
 
         .strength-text {
-            font-size: 12px;
-            margin-top: 5px;
-            color: #666;
+            font-size: 11px;
+            margin-top: 6px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .form-panel {
+                padding: 40px 28px;
+            }
+
+            .brand-logo {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
+    
     <div class="container">
-        <!-- Form Login -->
-        <div id="loginForm" class="form-container">
-            <h2>Selamat Datang</h2>
-            <p class="subtitle">Silakan login ke akun Anda</p>
-            
-            <div class="success-message" id="loginSuccess"></div>
-            
-            <form id="loginFormElement">
-                <div class="input-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" placeholder="nama@email.com" required>
-                    <div class="error" id="loginEmailError"></div>
-                </div>
-                
-                <div class="input-group">
-                    <label for="loginPassword">Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="loginPassword" placeholder="Masukkan password" required>
-                        <span class="toggle-password" onclick="togglePassword('loginPassword')">👁</span>
-                    </div>
-                    <div class="error" id="loginPasswordError"></div>
-                </div>
-                
-                <button type="submit" class="btn">Masuk</button>
-            </form>
-            
-            <div class="switch-form">
-                Belum punya akun? <a onclick="showRegister()">Daftar di sini</a>
+        <div class="form-panel">
+            <div class="brand">
+                <div class="brand-logo">SHINNING<span>BRIGHT.</span></div>
+                <div class="brand-tagline">Premium Fashion</div>
             </div>
-        </div>
 
-        <!-- Form Register -->
-        <div id="registerForm" class="form-container hidden">
-            <h2>Buat Akun Baru</h2>
-            <p class="subtitle">Daftar untuk memulai</p>
-            
-            <form id="registerFormElement">
-                <div class="input-group">
-                    <label for="registerName">Nama Lengkap</label>
-                    <input type="text" id="registerName" placeholder="Masukkan nama lengkap" required>
-                    <div class="error" id="registerNameError"></div>
-                </div>
+            <!-- Form Login -->
+            <div id="loginForm" class="form-container">
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Sign in to continue shopping</p>
                 
-                <div class="input-group">
-                    <label for="registerEmail">Email</label>
-                    <input type="email" id="registerEmail" placeholder="nama@email.com" required>
-                    <div class="error" id="registerEmailError"></div>
-                </div>
+                <div class="success-message" id="loginSuccess"></div>
                 
-                <div class="input-group">
-                    <label for="registerPassword">Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="registerPassword" placeholder="Minimal 8 karakter" required>
-                        <span class="toggle-password" onclick="togglePassword('registerPassword')">👁</span>
+                <form id="loginFormElement">
+                    <div class="input-group">
+                        <input type="email" id="loginEmail" placeholder="Email address" required>
+                        <div class="error" id="loginEmailError"></div>
                     </div>
-                    <div class="strength-meter">
-                        <div class="strength-meter-fill" id="strengthMeter"></div>
+                    
+                    <div class="input-group">
+                        <div class="password-wrapper">
+                            <input type="password" id="loginPassword" placeholder="Password" required>
+                            <span class="toggle-password" onclick="togglePassword('loginPassword')">
+                                <i class="bi bi-eye"></i>
+                            </span>
+                        </div>
+                        <div class="error" id="loginPasswordError"></div>
                     </div>
-                    <div class="strength-text" id="strengthText"></div>
-                    <div class="error" id="registerPasswordError"></div>
-                </div>
-                
-                <div class="input-group">
-                    <label for="registerConfirmPassword">Konfirmasi Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="registerConfirmPassword" placeholder="Ulangi password" required>
-                        <span class="toggle-password" onclick="togglePassword('registerConfirmPassword')">👁</span>
-                    </div>
-                    <div class="error" id="registerConfirmPasswordError"></div>
-                </div>
-                
-                <button type="submit" class="btn">Daftar</button>
-            </form>
-            
-            <div class="switch-form">
-                Sudah punya akun? <a onclick="showLogin()">Login di sini</a>
-            </div>
-        </div>
+                    
+                    <button type="submit" class="btn">Sign In</button>
+                </form>
 
-        <!-- Dashboard -->
-        <div id="dashboard" class="dashboard">
-            <h2>Dashboard</h2>
-            <div class="user-info">
-                <p><strong>Selamat datang!</strong></p>
-                <p>Nama: <span id="dashboardName"></span></p>
-                <p>Email: <span id="dashboardEmail"></span></p>
-                <p>Waktu Login: <span id="loginTime"></span></p>
+                <div class="divider"><span>or</span></div>
+
+                <button class="btn btn-guest" onclick="continueAsGuest()">
+                    <i class="bi bi-person"></i> Continue as Guest
+                </button>
+                
+                <div class="switch-form">
+                    Don't have an account? <a onclick="showRegister()">Sign Up</a>
+                </div>
             </div>
-            <button class="btn logout-btn" onclick="logout()">Logout</button>
+
+            <!-- Form Register -->
+            <div id="registerForm" class="form-container hidden">
+                <h2>Create Account</h2>
+                <p class="subtitle">Get 30% off your first purchase</p>
+                
+                <form id="registerFormElement">
+                    <div class="input-group">
+                        <input type="text" id="registerName" placeholder="Full name" required>
+                        <div class="error" id="registerNameError"></div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="email" id="registerEmail" placeholder="Email address" required>
+                        <div class="error" id="registerEmailError"></div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="password-wrapper">
+                            <input type="password" id="registerPassword" placeholder="Create password" required>
+                            <span class="toggle-password" onclick="togglePassword('registerPassword')">
+                                <i class="bi bi-eye"></i>
+                            </span>
+                        </div>
+                        <div class="strength-meter">
+                            <div class="strength-meter-fill" id="strengthMeter"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText"></div>
+                        <div class="error" id="registerPasswordError"></div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="password-wrapper">
+                            <input type="password" id="registerConfirmPassword" placeholder="Confirm password" required>
+                            <span class="toggle-password" onclick="togglePassword('registerConfirmPassword')">
+                                <i class="bi bi-eye"></i>
+                            </span>
+                        </div>
+                        <div class="error" id="registerConfirmPasswordError"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn">Create Account</button>
+                </form>
+
+                <div class="divider"><span>or</span></div>
+
+                <button class="btn btn-guest" onclick="continueAsGuest()">
+                    <i class="bi bi-person"></i> Continue as Guest
+                </button>
+                
+                <div class="switch-form">
+                    Already have an account? <a onclick="showLogin()">Sign In</a>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div id="dashboard" class="dashboard">
+                <div class="welcome-header">
+                    <div class="user-avatar" id="userAvatar">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="guest-badge" id="guestBadge" style="display: none;">
+                        <i class="bi bi-incognito"></i> Guest Mode
+                    </div>
+                    <h2 id="welcomeName">Welcome!</h2>
+                    <p class="subtitle" id="welcomeEmail"></p>
+                </div>
+
+                <div class="user-info" id="userInfoCard">
+                    <div class="user-info-item">
+                        <span>Status</span>
+                        <strong id="userStatus">Member</strong>
+                    </div>
+                    <div class="user-info-item">
+                        <span>Login Time</span>
+                        <strong id="loginTime"></strong>
+                    </div>
+                </div>
+                
+                <div class="discount-card" id="discountCard" style="display: none;">
+                    <div class="discount-content">
+                        <div class="discount-badge">
+                            <i class="bi bi-gift-fill"></i> NEW MEMBER BONUS
+                        </div>
+                        <div class="discount-text">30% OFF</div>
+                        <div class="discount-code" id="discountCode"></div>
+                        <p style="color: rgba(255,255,255,0.8); font-size: 12px; margin-top: 12px;">
+                            Use this code at checkout
+                        </p>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="redirectToShop()">
+                    <i class="bi bi-bag-fill"></i> Start Shopping
+                </button>
+                <button class="btn btn-secondary" onclick="logout()" style="margin-top: 12px;">
+                    <i class="bi bi-box-arrow-right"></i> Sign Out
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Data pengguna tersimpan di memori
-        let users = [];
-        let currentUser = null;
+        // Database simulation
+        class Database {
+            constructor() {
+                this.users = [];
+            }
 
-        // Toggle visibility password
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            field.type = field.type === 'password' ? 'text' : 'password';
+            addUser(user) {
+                user.id = Date.now();
+                user.registeredAt = new Date().toISOString();
+                user.isNewUser = true;
+                user.discountCode = this.generateDiscountCode();
+                this.users.push(user);
+                return user;
+            }
+
+            findUser(email) {
+                return this.users.find(u => u.email === email);
+            }
+
+            generateDiscountCode() {
+                return 'NEW30-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            }
+
+            validateCredentials(email, password) {
+                const user = this.findUser(email);
+                return user && user.password === password ? user : null;
+            }
         }
 
-        // Switch antara form
+        const db = new Database();
+        let currentUser = null;
+        let isGuest = false;
+
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = field.nextElementSibling.querySelector('i');
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
+
         function showRegister() {
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('registerForm').classList.remove('hidden');
@@ -335,54 +641,43 @@
             document.getElementById('loginForm').classList.remove('hidden');
         }
 
-        // Validasi email
         function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
 
-        // Password strength checker
         function checkPasswordStrength(password) {
             let strength = 0;
-            const strengthMeter = document.getElementById('strengthMeter');
-            const strengthText = document.getElementById('strengthText');
+            const meter = document.getElementById('strengthMeter');
+            const text = document.getElementById('strengthText');
             
             if (password.length >= 8) strength += 25;
             if (password.match(/[a-z]+/)) strength += 25;
             if (password.match(/[A-Z]+/)) strength += 25;
             if (password.match(/[0-9]+/)) strength += 25;
             
-            strengthMeter.style.width = strength + '%';
+            meter.style.width = strength + '%';
             
-            if (strength <= 25) {
-                strengthMeter.style.background = '#e74c3c';
-                strengthText.textContent = 'Lemah';
-                strengthText.style.color = '#e74c3c';
-            } else if (strength <= 50) {
-                strengthMeter.style.background = '#f39c12';
-                strengthText.textContent = 'Sedang';
-                strengthText.style.color = '#f39c12';
-            } else if (strength <= 75) {
-                strengthMeter.style.background = '#3498db';
-                strengthText.textContent = 'Baik';
-                strengthText.style.color = '#3498db';
-            } else {
-                strengthMeter.style.background = '#2ecc71';
-                strengthText.textContent = 'Kuat';
-                strengthText.style.color = '#2ecc71';
-            }
+            const colors = {
+                25: { bg: '#ff4757', text: 'Weak' },
+                50: { bg: '#ffa502', text: 'Fair' },
+                75: { bg: '#3498db', text: 'Good' },
+                100: { bg: '#2ecc71', text: 'Strong' }
+            };
+            
+            const level = strength <= 25 ? 25 : strength <= 50 ? 50 : strength <= 75 ? 75 : 100;
+            meter.style.background = colors[level].bg;
+            text.textContent = colors[level].text;
+            text.style.color = colors[level].bg;
         }
 
-        // Event listener untuk password strength
         document.getElementById('registerPassword').addEventListener('input', function() {
             checkPasswordStrength(this.value);
         });
 
-        // Handle Register
+        // Register
         document.getElementById('registerFormElement').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Clear previous errors
             document.querySelectorAll('.error').forEach(err => err.classList.remove('show'));
             
             const name = document.getElementById('registerName').value.trim();
@@ -392,56 +687,47 @@
             
             let hasError = false;
             
-            // Validasi nama
             if (name.length < 3) {
-                document.getElementById('registerNameError').textContent = 'Nama minimal 3 karakter';
+                document.getElementById('registerNameError').textContent = 'Name must be at least 3 characters';
                 document.getElementById('registerNameError').classList.add('show');
                 hasError = true;
             }
             
-            // Validasi email
             if (!validateEmail(email)) {
-                document.getElementById('registerEmailError').textContent = 'Format email tidak valid';
+                document.getElementById('registerEmailError').textContent = 'Invalid email format';
                 document.getElementById('registerEmailError').classList.add('show');
                 hasError = true;
             }
             
-            // Cek email sudah terdaftar
-            if (users.find(u => u.email === email)) {
-                document.getElementById('registerEmailError').textContent = 'Email sudah terdaftar';
+            if (db.findUser(email)) {
+                document.getElementById('registerEmailError').textContent = 'Email already registered';
                 document.getElementById('registerEmailError').classList.add('show');
                 hasError = true;
             }
             
-            // Validasi password
             if (password.length < 8) {
-                document.getElementById('registerPasswordError').textContent = 'Password minimal 8 karakter';
+                document.getElementById('registerPasswordError').textContent = 'Password must be at least 8 characters';
                 document.getElementById('registerPasswordError').classList.add('show');
                 hasError = true;
             }
             
-            // Validasi konfirmasi password
             if (password !== confirmPassword) {
-                document.getElementById('registerConfirmPasswordError').textContent = 'Password tidak cocok';
+                document.getElementById('registerConfirmPasswordError').textContent = 'Passwords do not match';
                 document.getElementById('registerConfirmPasswordError').classList.add('show');
                 hasError = true;
             }
             
             if (!hasError) {
-                // Simpan user
-                users.push({ name, email, password });
+                const newUser = db.addUser({ name, email, password });
                 
-                // Show success message
                 const successMsg = document.getElementById('loginSuccess');
-                successMsg.textContent = 'Registrasi berhasil! Silakan login.';
+                successMsg.textContent = '✓ Account created! You got 30% off. Please sign in.';
                 successMsg.classList.add('show');
                 
-                // Reset form
                 this.reset();
                 document.getElementById('strengthMeter').style.width = '0';
                 document.getElementById('strengthText').textContent = '';
                 
-                // Pindah ke login
                 setTimeout(() => {
                     showLogin();
                     setTimeout(() => successMsg.classList.remove('show'), 3000);
@@ -449,11 +735,10 @@
             }
         });
 
-        // Handle Login
+        // Login
         document.getElementById('loginFormElement').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Clear previous errors
             document.querySelectorAll('.error').forEach(err => err.classList.remove('show'));
             
             const email = document.getElementById('loginEmail').value.trim();
@@ -461,44 +746,83 @@
             
             let hasError = false;
             
-            // Validasi email
             if (!validateEmail(email)) {
-                document.getElementById('loginEmailError').textContent = 'Format email tidak valid';
+                document.getElementById('loginEmailError').textContent = 'Invalid email format';
                 document.getElementById('loginEmailError').classList.add('show');
                 hasError = true;
             }
             
-            // Cek kredensial
-            const user = users.find(u => u.email === email && u.password === password);
+            const user = db.validateCredentials(email, password);
             
             if (!user && !hasError) {
-                document.getElementById('loginPasswordError').textContent = 'Email atau password salah';
+                document.getElementById('loginPasswordError').textContent = 'Invalid email or password';
                 document.getElementById('loginPasswordError').classList.add('show');
                 hasError = true;
             }
             
             if (!hasError && user) {
-                currentUser = user;
-                
-                // Tampilkan dashboard
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('dashboard').classList.add('show');
-                
-                // Set user info
-                document.getElementById('dashboardName').textContent = user.name;
-                document.getElementById('dashboardEmail').textContent = user.email;
-                document.getElementById('loginTime').textContent = new Date().toLocaleString('id-ID');
-                
-                // Reset form
+                showDashboard(user, false);
                 this.reset();
             }
         });
 
-        // Handle Logout
+        // Continue as Guest
+        function continueAsGuest() {
+            const guestUser = {
+                name: 'Guest User',
+                email: 'guest@example.com',
+                isNewUser: false
+            };
+            showDashboard(guestUser, true);
+        }
+
+        function showDashboard(user, guest) {
+            currentUser = user;
+            isGuest = guest;
+            
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('show');
+            
+            const avatar = document.getElementById('userAvatar');
+            avatar.innerHTML = guest ? '<i class="bi bi-incognito"></i>' : '<i class="bi bi-person-fill"></i>';
+            
+            document.getElementById('guestBadge').style.display = guest ? 'inline-flex' : 'none';
+            document.getElementById('welcomeName').textContent = `Welcome, ${user.name.split(' ')[0]}!`;
+            document.getElementById('welcomeEmail').textContent = guest ? 'Shopping without account' : user.email;
+            
+            document.getElementById('userStatus').textContent = guest ? 'Guest' : 'Member';
+            document.getElementById('loginTime').textContent = new Date().toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            if (user.isNewUser && !guest) {
+                document.getElementById('discountCard').style.display = 'block';
+                document.getElementById('discountCode').textContent = user.discountCode;
+            } else {
+                document.getElementById('discountCard').style.display = 'none';
+            }
+
+            if (guest) {
+                document.getElementById('userInfoCard').style.display = 'none';
+            } else {
+                document.getElementById('userInfoCard').style.display = 'block';
+            }
+        }
+
         function logout() {
             currentUser = null;
+            isGuest = false;
             document.getElementById('dashboard').classList.remove('show');
             document.getElementById('loginForm').classList.remove('hidden');
+        }
+
+        function redirectToShop() {
+            const message = isGuest 
+                ? 'Shopping as Guest\n\nNote: Create an account to get 30% discount!' 
+                : `Shopping as: ${currentUser.name}\n${currentUser.isNewUser ? 'Discount: ' + currentUser.discountCode : 'No discount available'}`;
+            alert(message);
         }
     </script>
 </body>
