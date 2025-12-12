@@ -13,27 +13,29 @@
 <body>
 
   <!-- Navbar kalo engga di scroll bg-white border-bottom -->
-  <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid d-flex align-items-center justify-content-between">
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        SHINNING<span>BRIGHT.</span>
+      </a>
 
-      <div class="d-flex align-items-center">
-        <a class="navbar-brand" href="index.html">
-          SHINNING<span>BRIGHT.</span>
-        </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <div class="collapse navbar-collapse show" id="navbarNav">
-          <ul class="navbar-nav d-flex align-items-center">
-            <li class="nav-item"><a class="nav-link" href="#">SHOP</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">NEW ARRIVALS</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">ABOUT</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">CONTACT</a></li>
-          </ul>
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">SHOP</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">NEW ARRIVALS</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">ABOUT</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">CONTACT</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center icon-group">
+          <i class="bi bi-search"></i>
+          <i class="bi bi-bag"></i>
         </div>
-      </div>
-
-      <div class="icon-group d-flex align-items-center">
-        <i class="bi bi-search"></i>
-        <i class="bi bi-bag"></i>
       </div>
     </div>
   </nav>
@@ -128,6 +130,7 @@
     </div>
   </footer>
 
+  <script src="Assets/Shopping/js/general.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="Assets/Shopping/js/data.js"></script>
 
