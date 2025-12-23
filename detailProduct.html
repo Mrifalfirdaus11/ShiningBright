@@ -43,6 +43,20 @@
             <div class="cart2">
                 <img class="search" src="Assets/assetnavbarhero/search.svg" alt="Search Icon" />
                 <a href="payment.html"><img src="Assets/assetnavbarhero/shop.svg" alt="Cart Icon" /></a>
+                <div class="user-dropdown" id="user-container">
+                    <span id="user-display-name" class="hidden" onclick="toggleDropdown()"
+                        style="font-weight: bold; color: black; font-size: 15px; cursor: pointer;">
+                        <i class="bi bi-chevron-down" style="font-size: 12px; margin-left: 5px;"></i>
+                    </span>
+
+                    <div id="dropdown-content" class="dropdown-menu hidden">
+                        <a href="profile.html"><i class="bi bi-person"></i> My Profile</a>
+                        <hr>
+                        <button onclick="logout()" id="logout-btn">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="menu-toggle" id="menu-toggle">☰</div>
@@ -240,32 +254,64 @@
 
     <script src="Assets/Shopping/js/general.js"></script>
     <script src="Assets/Shopping/js/data.js"></script>
+    <script src="Assets/Shopping/js/auth.js"></script>
     <script src="Assets/Shopping/js/search.js"></script>
-    <script src="Assets/Homepage/js/landingpage.js"></script>
+    <!-- <script src="Assets/Homepage/js/landingpage.js"></script> -->
+    <script>
+
+        window.toggleDropdown = function () {
+            const dropdown = document.getElementById("dropdown-content");
+            if (dropdown) {
+                dropdown.classList.toggle("hidden");
+            }
+        };
+
+        window.addEventListener("click", (e) => {
+            const container = document.getElementById("user-container");
+            const dropdown = document.getElementById("dropdown-content");
+            if (container && !container.contains(e.target)) {
+                dropdown?.classList.add("hidden");
+            }
+        });
+
+        function displayUserInfo() {
+            const auth = JSON.parse(localStorage.getItem(AUTH_KEY));
+            const userNameElement = document.getElementById("user-display-name");
+            const loginLink = document.getElementById("login-link");
+            const logoutBtn = document.getElementById("logout-btn");
+
+            if (auth && auth.isLogin) {
+                if (userNameElement) {
+                    userNameElement.innerHTML = `Hi, ${auth.name} <i class="bi bi-chevron-down" style="font-size: 12px; margin-left: 5px;"></i>`;
+                    userNameElement.classList.remove("hidden");
+                }
+                if (loginLink) loginLink.classList.add("hidden");
+                if (logoutBtn) logoutBtn.classList.remove("hidden");
+            } else {
+                if (userNameElement) userNameElement.classList.add("hidden");
+                if (loginLink) loginLink.classList.remove("hidden");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", displayUserInfo);
+    </script>
+
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get("id");
-
-        // Pastikan variabel ini bisa diakses script lain
-        const currentProduct = products.find((p) => p.id === productId);
+        const currentProduct = typeof products !== 'undefined' ? products.find((p) => p.id === productId) : null;
 
         if (!currentProduct) {
             console.error("Produk tidak ditemukan!");
-            // Opsional: arahkan balik ke index jika produk tidak ada
-            // window.location.href = 'index.html'; 
         } else {
-            // Render Detail Produk
             document.getElementById("productName").textContent = currentProduct.name;
-            document.getElementById("oldPrice").textContent = "Rp " + currentProduct.oldPrice.toLocaleString();
-            document.getElementById("newPrice").textContent = "Rp " + currentProduct.newPrice.toLocaleString();
+            document.getElementById("oldPrice").textContent = "Rp " + (currentProduct.oldPrice || 0).toLocaleString();
+            document.getElementById("newPrice").textContent = "Rp " + (currentProduct.newPrice || 0).toLocaleString();
             document.getElementById("discount").textContent = currentProduct.discount + "%";
-
             document.getElementById("tag1").textContent = currentProduct.tag1 || "";
             document.getElementById("tag2").textContent = currentProduct.tag2 || "";
-
             document.getElementById("mainImage").src = currentProduct.images[0];
 
-            // Render Thumbnails
             const thumbnailList = document.getElementById("thumbnailList");
             thumbnailList.innerHTML = "";
             currentProduct.images.forEach((img) => {
@@ -275,112 +321,92 @@
                 thumbnailList.appendChild(thumb);
             });
 
-            // Render Size List
             const sizeContainer = document.getElementById("sizeList");
             sizeContainer.innerHTML = "";
-
             currentProduct.sizes.forEach((item) => {
                 const isSoldOut = item.stock === 0;
                 const isLowStock = item.stock > 0 && item.stock <= 3;
-
                 const row = document.createElement("div");
                 row.classList.add("size-item");
                 if (isSoldOut) row.classList.add("soldout");
 
-                let stockText = isSoldOut
-                    ? "(Sold Out)"
-                    : isLowStock
-                        ? `(Low Stock: ${item.stock})`
-                        : `(Stock: ${item.stock})`;
+                let stockText = isSoldOut ? "(Sold Out)" : isLowStock ? `(Low Stock: ${item.stock})` : `(Stock: ${item.stock})`;
 
                 row.innerHTML = `
-                  <span>${item.size}</span>
-                  <span>Rp ${item.price.toLocaleString()} ${stockText}</span>
-                  <button ${isSoldOut ? "disabled" : ""} class="btn-buy">Buy</button>
+                    <span>${item.size}</span>
+                    <span>Rp ${item.price.toLocaleString()} ${stockText}</span>
+                    <button ${isSoldOut ? "disabled" : ""} class="btn-buy">Buy</button>
                 `;
 
                 row.querySelector("button").addEventListener("click", () => {
                     addToCart(currentProduct, item);
                 });
-
                 sizeContainer.appendChild(row);
             });
 
-            // Fungsi Tambah ke Cart (Pastikan elemen .product-list ada di HTML)
             function addToCart(product, sizeItem) {
-                // 1. Ambil data keranjang yang sudah ada di LocalStorage (jika belum ada, buat array kosong)
                 let cart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
-
-                // 2. Siapkan data produk baru
                 const newItem = {
-                    id: product.id + sizeItem.size, // Gabungan ID dan Size agar unik
+                    id: product.id + sizeItem.size,
                     name: product.name,
                     size: sizeItem.size,
                     quantity: 1,
                     price: sizeItem.price
                 };
 
-                // 3. Cek apakah barang yang sama dengan size yang sama sudah ada di keranjang?
                 const existingItemIndex = cart.findIndex(item => item.id === newItem.id);
-
                 if (existingItemIndex > -1) {
-                    // Jika sudah ada, cukup tambah jumlahnya (Quantity)
                     cart[existingItemIndex].quantity += 1;
                 } else {
-                    // Jika belum ada, masukkan sebagai barang baru
                     cart.push(newItem);
                 }
 
-                // 4. Simpan kembali daftar terbaru ke LocalStorage
                 localStorage.setItem("shoppingCart", JSON.stringify(cart));
-
-                // 5. Alert saja, jangan pindah halaman
                 alert(`${product.name} (Size ${sizeItem.size}) ditambahkan ke keranjang!`);
             }
 
-            // Render Related Products
             const relatedBox = document.getElementById("relatedList");
-            relatedBox.innerHTML = "";
+            if (relatedBox && typeof products !== 'undefined') {
+                relatedBox.innerHTML = "";
+                let related = products.filter(p => p.category === currentProduct.category && p.id !== currentProduct.id);
 
-            let related = products.filter(p => p.category === currentProduct.category && p.id !== currentProduct.id);
+                if (related.length < 6) {
+                    const others = products.filter(p => p.id !== currentProduct.id);
+                    others.forEach(o => {
+                        if (related.length < 6 && !related.find(r => r.id === o.id)) {
+                            related.push(o);
+                        }
+                    });
+                }
 
-            if (related.length < 6) {
-                const others = products.filter(p => p.id !== currentProduct.id);
-                others.forEach(o => {
-                    if (related.length < 6 && !related.find(r => r.id === o.id)) {
-                        related.push(o);
-                    }
+                related.slice(0, 6).forEach((item) => {
+                    const displayOldPrice = item.oldPrice ? item.oldPrice.toLocaleString() : "0";
+                    const displayNewPrice = item.newPrice ? item.newPrice.toLocaleString() : "0";
+                    let col = document.createElement("div");
+                    col.className = "col-6 col-md-3 col-lg-2";
+                    col.innerHTML = `
+                        <div class="related-item" style="cursor:pointer" onclick="window.location.href='detailProduct.html?id=${item.id}'">
+                            <img src="${item.images[0]}" class="related-img" style="width:100%">
+                            <div class="related-info">
+                                <h6 class="mt-2">${item.name}</h6>
+                                <p class="old text-muted text-decoration-line-through" style="font-size:0.8rem">Rp ${displayOldPrice}</p>
+                                <p class="new text-danger fw-bold">Rp ${displayNewPrice}</p>
+                            </div>
+                        </div>
+                    `;
+                    relatedBox.appendChild(col);
                 });
             }
-
-            related.slice(0, 6).forEach((item) => {
-                let col = document.createElement("div");
-                col.className = "col-6 col-md-3 col-lg-2";
-                col.innerHTML = `
-                  <div class="related-item" style="cursor:pointer" onclick="window.location.href='detailProduct.html?id=${item.id}'">
-                    <img src="${item.images[0]}" class="related-img" style="width:100%">
-                    <div class="related-info">
-                      <h6 class="mt-2">${item.name}</h6>
-                      <p class="old text-muted text-decoration-line-through" style="font-size:0.8rem">Rp ${item.oldPrice.toLocaleString()}</p>
-                      <p class="new text-danger fw-bold">Rp ${item.newPrice.toLocaleString()}</p>
-                    </div>
-                  </div>
-                `;
-                relatedBox.appendChild(col);
-            });
         }
     </script>
 
     <script>
-        // Logic Recent Products
         const RECENT_KEY = "recent_products";
         const MAX_RECENT = 9;
 
         function saveRecentProduct(product) {
             let recent = JSON.parse(localStorage.getItem(RECENT_KEY)) || [];
-            // Hapus jika sudah ada (supaya pindah ke paling atas)
             recent = recent.filter((item) => item.id !== product.id);
-            // Tambah ke awal array
             recent.unshift({
                 id: product.id,
                 name: product.name,
@@ -388,7 +414,6 @@
                 newPrice: product.newPrice,
                 oldPrice: product.oldPrice
             });
-            // Batasi jumlah
             recent = recent.slice(0, MAX_RECENT);
             localStorage.setItem(RECENT_KEY, JSON.stringify(recent));
         }

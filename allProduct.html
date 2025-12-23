@@ -14,13 +14,13 @@
   <!-- Navbar -->
   <nav>
     <div class="left-nav">
-        <div class="logo">
-            <a href="index.html">
-                <img src="Assets/assetnavbarhero/logosb.png" alt="Shinning Bright Logo" />
-            </a>
-        </div>
+      <div class="logo">
+        <a href="index.html">
+          <img src="Assets/assetnavbarhero/logosb.png" alt="Shinning Bright Logo" />
+        </a>
+      </div>
 
-        <!-- <div class="nav-links">
+      <!-- <div class="nav-links">
       <a href="#">SHOP</a>
       <a href="#">NEW ARRIVALS</a>
       <a href="#">ABOUT</a>
@@ -40,14 +40,28 @@
         />
       </div> -->
     <div class="cart">
-        <div class="cart2">
-            <img class="search" src="Assets/assetnavbarhero/search.svg" alt="Search Icon" />
-            <img src="Assets/assetnavbarhero/shop.svg" alt="Cart Icon" />
-        </div>
+      <div class="cart2">
+        <img class="search" src="Assets/assetnavbarhero/search.svg" alt="Search Icon" />
+        <a href="payment.html"><img src="Assets/assetnavbarhero/shop.svg" alt="Cart Icon" /></a>
+        <div class="user-dropdown" id="user-container">
+          <span id="user-display-name" class="hidden" onclick="toggleDropdown()"
+            style="font-weight: bold; color: black; font-size: 15px; cursor: pointer;">
+            <i class="bi bi-chevron-down" style="font-size: 12px; margin-left: 5px;"></i>
+          </span>
 
-        <div class="menu-toggle" id="menu-toggle">☰</div>
+          <div id="dropdown-content" class="dropdown-menu hidden">
+            <a href="profile.html"><i class="bi bi-person"></i> My Profile</a>
+            <hr>
+            <button onclick="logout()" id="logout-btn">
+              <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-toggle" id="menu-toggle">☰</div>
     </div>
-</nav>
+  </nav>
 
   <div class="search-overlay">
     <!-- SEARCH BOX (atas) -->
@@ -192,103 +206,134 @@
   </footer>
 
   <script src="Assets/Shopping/js/general.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="Assets/Shopping/js/data.js"></script>
+  <script src="Assets/Shopping/js/auth.js"></script>
   <script src="Assets/Shopping/js/search.js"></script>
-  <!-- <script src="Assets/Homepage/js/landingpage.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    const productList = document.getElementById("productList");
-    const filterCategory = document.getElementById("filterCategory");
+    /* ================= 1. FUNGSI GLOBAL (DROPDOWN & RENDER) ================= */
+
+    /* ================= DROPDOWN CONTROL ================= */
+    window.toggleDropdown = function () {
+      const dropdown = document.getElementById("dropdown-content");
+      if (dropdown) {
+        dropdown.classList.toggle("hidden");
+      }
+    };
+
+    // Menutup dropdown jika user klik di luar menu
+    window.addEventListener("click", (e) => {
+      const container = document.getElementById("user-container");
+      const dropdown = document.getElementById("dropdown-content");
+      if (container && !container.contains(e.target)) {
+        dropdown?.classList.add("hidden");
+      }
+    });
+
+    /* ================= UI FUNCTIONS ================= */
+    function displayUserInfo() {
+      const auth = JSON.parse(localStorage.getItem(AUTH_KEY));
+      const userNameElement = document.getElementById("user-display-name");
+      const loginLink = document.getElementById("login-link"); // Pastikan ID ini ada di HTML (tombol LOGIN)
+      const logoutBtn = document.getElementById("logout-btn");
+
+      if (auth && auth.isLogin) {
+        // Tampilkan kontainer user (Guest atau User terdaftar)
+        if (userNameElement) {
+          // Kita pertahankan ikon chevron di dalam span
+          userNameElement.innerHTML = `Hi, ${auth.name} <i class="bi bi-chevron-down" style="font-size: 12px; margin-left: 5px;"></i>`;
+          userNameElement.classList.remove("hidden");
+        }
+
+        // Sembunyikan link login
+        if (loginLink) loginLink.classList.add("hidden");
+
+        // Tampilkan tombol logout
+        if (logoutBtn) logoutBtn.classList.remove("hidden");
+
+      } else {
+        // Jika tidak login
+        if (userNameElement) userNameElement.classList.add("hidden");
+        if (loginLink) loginLink.classList.remove("hidden");
+      }
+    }
 
     function renderProducts(data) {
+      const productList = document.getElementById("productList");
+      if (!productList) return;
+
       productList.innerHTML = "";
+      if (data.length === 0) {
+        productList.innerHTML = `<div class="col-12 text-center"><p>No products found.</p></div>`;
+        return;
+      }
 
       data.forEach((product) => {
         const card = document.createElement("div");
         card.classList.add("col-6", "col-md-4", "col-lg-3");
-
         card.innerHTML = `
-        <div class="product-card" onclick="goToDetail('${product.id}')">
-          <img src="${product.images[0]}" alt="${product.name}">
-          <div class="product-info">
-            <h6>${product.tag2}</h6>
-            <p>${product.name}</p>
-            <p class="price">Rp ${product.newPrice.toLocaleString()}</p>
+          <div class="product-card" onclick="goToDetail('${product.id}')" style="cursor:pointer">
+            <img src="${product.images[0]}" alt="${product.name}" class="img-fluid">
+            <div class="product-info">
+              <h6>${product.tag2}</h6>
+              <p>${product.name}</p>
+              <p class="price">Rp ${product.newPrice.toLocaleString()}</p>
+            </div>
           </div>
-        </div>
-      `;
-
+        `;
         productList.appendChild(card);
       });
     }
 
-    // render awal
-    renderProducts(products);
-
-    filterCategory.addEventListener("change", function () {
-      const category = this.value;
-
-      if (category === "all") {
-        renderProducts(products);
-      } else {
-        const filteredProducts = products.filter(
-          (product) => product.tag2.toLowerCase() === category.toLowerCase()
-        );
-
-        renderProducts(filteredProducts);
-      }
-    });
-
     function goToDetail(id) {
       window.location.href = "detailProduct.html?id=" + id;
     }
-  </script>
 
-  <script>
+    /* ================= 2. INITIALIZATION (DOM READY) ================= */
+
     document.addEventListener("DOMContentLoaded", function () {
-      const productList = document.getElementById("productList");
+      // Jalankan info user login
+      if (typeof displayUserInfo === "function") {
+        displayUserInfo();
+      }
+
       const filterCategory = document.getElementById("filterCategory");
 
-      if (
-        !productList ||
-        !filterCategory ||
-        typeof products === "undefined"
-      ) {
-        console.warn("Element / data produk belum siap");
+      // Pastikan variabel 'products' (dari data.js) tersedia
+      if (typeof products === "undefined") {
+        console.error("Data 'products' tidak ditemukan. Pastikan data.js terpanggil.");
         return;
       }
 
-      // ================= AMBIL CATEGORY DARI URL =================
+      // --- LOGIKA FILTER & URL PARAMS ---
       const params = new URLSearchParams(window.location.search);
       const categoryFromUrl = params.get("category");
 
-      // ================= RENDER AWAL =================
-      if (categoryFromUrl) {
+      if (categoryFromUrl && filterCategory) {
         filterCategory.value = categoryFromUrl;
-
         const filtered = products.filter(
           (p) => p.tag2.toLowerCase() === categoryFromUrl.toLowerCase()
         );
-
         renderProducts(filtered);
       } else {
         renderProducts(products);
       }
 
-      // ================= EVENT DROPDOWN CATEGORY =================
-      filterCategory.addEventListener("change", function () {
-        const category = this.value;
-
-        if (category === "all") {
-          renderProducts(products);
-        } else {
-          const filtered = products.filter(
-            (p) => p.tag2.toLowerCase() === category.toLowerCase()
-          );
-          renderProducts(filtered);
-        }
-      });
+      // --- EVENT LISTENER FILTER ---
+      if (filterCategory) {
+        filterCategory.addEventListener("change", function () {
+          const category = this.value;
+          if (category === "all") {
+            renderProducts(products);
+          } else {
+            const filtered = products.filter(
+              (p) => p.tag2.toLowerCase() === category.toLowerCase()
+            );
+            renderProducts(filtered);
+          }
+        });
+      }
     });
   </script>
 

@@ -71,7 +71,7 @@ nav.navbar {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  z-index: 1000;
+  z-index: 10;
 }
 
 /* Search Overlay */
@@ -468,7 +468,7 @@ nav.navbar {
   justify-content: space-between;
   color: white;
   padding: 80px 50px;
-  background-image: url("/Assets/assetnewarrival/bgarrival.png");
+  background-image: url("../../assetnewarrival/bgarrival.png");
   background-size: cover; /* biar gambar memenuhi seluruh area */
   background-position: center; /* biar fokus gambarnya di tengah */
   background-repeat: no-repeat; /* biar nggak ngulang gambarnya */
@@ -1225,13 +1225,63 @@ footer {
   padding: 80px 60px;
 
   /* Background image */
-  background-image: url("/Assets/assetnavbarhero/collabbg.png");
+  background-image: url("../../assetnavbarhero/collabbg.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   backdrop-filter: blur(20px);
   border-radius: 20px;
   position: relative;
+}
+
+/* Kontainer relatif agar dropdown tahu posisi munculnya */
+.user-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tampilan Menu Dropdown */
+.dropdown-menu {
+  position: absolute;
+  z-index: 9999;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  min-width: 150px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  padding: 10px 0;
+  margin-top: 10px;
+  border: 1px solid #eee;
+}
+
+/* Item di dalam dropdown */
+.dropdown-menu a, .dropdown-menu button {
+  display: block;
+  padding: 10px 15px;
+  width: 100%;
+  text-align: left;
+  color: black;
+  text-decoration: none;
+  font-size: 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown-menu hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 5px 0;
+}
+
+/* Class untuk menyembunyikan elemen */
+.hidden {
+  display: none !important;
 }
 
 .collab-container {

@@ -121,6 +121,7 @@ const observer = new IntersectionObserver(
 observer.observe(video);
 
 
+
 //BAHASA INDO X INGGRIS
 
 

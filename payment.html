@@ -130,6 +130,26 @@
             margin-top: 20px;
         }
 
+        .payment-option {
+            border: 1px solid #ddd;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .selected-payment {
+            border: 2px solid #000;
+            background-color: #f8f9fa;
+        }
+
+        .char-count {
+            font-size: 0.8rem;
+            text-align: right;
+            color: #888;
+        }
+
         .order-btn:hover {
             opacity: 0.9;
         }
@@ -202,13 +222,13 @@
 
             <div class="section">
                 <label>Email Address (Optional)</label>
-                <input type="email">
+                <input type="email" id="p-email">
                 <small>We will send your order detail to your email</small>
             </div>
 
             <div class="section">
                 <label>Recipient Full Name</label>
-                <input type="text">
+                <input type="text" id="p-full-name">
             </div>
 
             <div class="section">
@@ -228,27 +248,69 @@
 
             <div class="section">
                 <label>Address Details</label>
-                <textarea maxlength="250"></textarea>
-                <div class="char-count">0/250</div>
+                <textarea id="addressInput" maxlength="250"></textarea>
+                <div class="char-count" id="charCount">0/250</div>
             </div>
 
-            <div class="section checkbox">
-                <input type="checkbox">
+            <!-- <div class="section checkbox">
+                <input type="checkbox" id="isDropship">
                 <span>Make as a dropship order</span>
-            </div>
+            </div> -->
 
             <div class="section">
                 <h2>Shipment Method</h2>
-                <div class="placeholder-box">
-                    Complete address detail to see available shipping methods.
+                <div id="shippingContainer">
+                    <div class="placeholder-box" id="shippingPlaceholder">
+                        Complete address detail to see available shipping methods.
+                    </div>
+                    <div id="shippingOptions" class="hidden-options" style="display: none;">
+                        <select class="form-select" id="shippingSelect">
+                            <option value="0" selected disabled>Choose Shipping...</option>
+                            <option value="10000">Regular (Rp 10,000)</option>
+                            <option value="20000">Express (Rp 20,000)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
             <div class="section">
                 <h2>Payment Method</h2>
-                <div class="payment-option">
-                    <span>QRIS</span>
-                    <span>QRIS</span>
+                <div class="payment-option-container">
+                    <div class="payment-option" onclick="selectPayment(this, 'QRIS')">
+                        <span>QRIS</span>
+                        <i class="bi bi-qr-code"></i>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment(this, 'BANK_TRANSFER')">
+                        <span>Bank Transfer</span>
+                        <i class="bi bi-bank"></i>
+                    </div>
+
+                    <div id="bankModal"
+                        style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center;">
+                        <div
+                            style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; position: relative;">
+                            <span onclick="document.getElementById('bankModal').style.display='none'"
+                                style="position: absolute; right: 20px; top: 10px; font-size: 28px; cursor: pointer;">&times;</span>
+
+                            <h3>Bank Transfer</h3>
+                            <p style="font-size: 14px; color: #666;">Please transfer to the following account:</p>
+
+                            <div
+                                style="background: #f8f8f8; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: left;">
+                                <p style="margin: 5px 0;"><strong>Bank BCA</strong></p>
+                                <p style="font-size: 18px; color: #000; letter-spacing: 1px;">128 007 225</p>
+                                <p style="font-size: 12px; color: #666;">A/N SHINNING BRIGHT CLOTHING</p>
+                                <hr>
+                                <p style="font-size: 12px; color: #888;">
+                                    Total:</p>
+                                <h2 id="bankTotalAmount" style="color: #d9534f; margin: 5px 0;"></h2>
+                            </div>
+
+                            <button onclick="finishOrder()"
+                                style="width: 100%; background: #000; color: #fff; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                I Have Paid</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -259,42 +321,42 @@
             <div class="summary">
                 <div class="product">
                     <div class="product-title" id="p-name">
-                        </div>
+                    </div>
                     <div id="p-size"></div>
                     <div id="p-qty">Quantity: 1</div>
                     <div id="p-price" style="text-align:right; font-weight:bold;">
-                        </div>
+                    </div>
                 </div>
-        
+
                 <input type="text" placeholder="Leave a message for delivery (Optional)" style="margin-bottom:10px;">
                 <input type="text" placeholder="Voucher">
-        
+
                 <div class="row">
                     <span id="subtotal-label">Subtotal * 1 items</span>
                     <span id="subtotal-price">Rp 0</span>
                 </div>
-        
+
                 <div class="row">
                     <span>Shipping</span>
-                    <span>Rp 0</span>
+                    <span id="shipping-price">Rp 0</span>
                 </div>
-        
+
                 <div class="row" id="discount-row" style="display: none; color: #2ecc71; font-weight: bold;">
                     <span>Member Discount (20%)</span>
                     <span id="discount-amount">- Rp 0</span>
                 </div>
-                
+
                 <div class="row total">
                     <span>Total Payment</span>
                     <span id="total-payment" style="color: #d9534f; font-weight: bold;">Rp 0</span>
                 </div>
-        
+
                 <small style="display:block; margin-top:10px; text-align:center;">
                     Secure Payment | Your payment is encrypted
                 </small>
-        
-                <button class="order-btn">Order Now</button>
-        
+
+                <button class="order-btn" id="placeOrderBtn">Order Now</button>
+
                 <div class="terms">
                     By placing your order, you agree to our Terms & Conditions
                 </div>
@@ -303,6 +365,29 @@
 
     </div>
 
+    <div id="qrisModal"
+        style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; position: relative;">
+            <span id="closeModal"
+                style="position: absolute; right: 20px; top: 10px; font-size: 28px; cursor: pointer;">&times;</span>
+
+            <h3 style="margin-top: 0;">Payment QRIS</h3>
+            <p style="font-size: 14px; color: #666;">Scan this QR code to complete your payment</p>
+
+            <div style="background: #f8f8f8; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <img id="modalQrImage" src="Assets/img/qris-asli-kamu.jpg" alt="QRIS Code"
+                    style="width: 250px; height: 250px;">
+                <h2 id="modalTotalAmount" style="color: #d9534f; margin: 15px 0 5px 0;"></h2>
+                <p style="font-size: 14px; color: #000; font-weight: bold;">Please transfer the amount above</p>
+                <p style="font-size: 12px; color: #888;">Order ID: <span id="orderId"></span></p>
+            </div>
+
+            <button onclick="finishOrder()"
+                style="width: 100%; background: #000; color: #fff; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold;">I
+                Have Paid</button>
+        </div>
+    </div>
     <footer>
         <div class="container footer">
             <div class="row justify-content-between">
@@ -369,77 +454,211 @@
     </footer>
 
     <script src="Assets/Shopping/js/auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // 1. Ambil Data dari LocalStorage
+        document.addEventListener("DOMContentLoaded", function () {
+            // 1. Inisialisasi Data
             const cart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
             const auth = JSON.parse(localStorage.getItem("SB_AUTH"));
-            
-            // Target elemen HTML
-            const productContainer = document.querySelector(".product"); 
+
+            // Elemen UI
+            const productContainer = document.querySelector(".product");
             const subtotalLabel = document.getElementById("subtotal-label");
             const subtotalPriceDisplay = document.getElementById("subtotal-price");
             const discountRow = document.getElementById("discount-row");
             const discountAmountDisplay = document.getElementById("discount-amount");
+            const shippingPriceDisplay = document.getElementById("shipping-price");
             const totalPaymentDisplay = document.getElementById("total-payment");
-        
-            // Bersihkan isi container produk awal
-            if (productContainer) productContainer.innerHTML = ""; 
-        
-            if (cart.length > 0) {
+
+            // Input Form
+            const addressInput = document.getElementById("addressInput");
+            const charCount = document.getElementById("charCount");
+            const shippingPlaceholder = document.getElementById("shippingPlaceholder");
+            const shippingOptions = document.getElementById("shippingOptions");
+            const shippingSelect = document.getElementById("shippingSelect");
+
+            // --- A. AUTOFILL FORM ---
+            if (auth && auth.isLogin) {
+                const emailInput = document.getElementById("p-email");
+                const nameInput = document.getElementById("p-full-name");
+                if (emailInput) emailInput.value = auth.email || "";
+                if (nameInput) nameInput.value = auth.name || "";
+
+                if (!auth.isGuest) {
+                    emailInput.readOnly = true;
+                    nameInput.readOnly = true;
+                    emailInput.style.backgroundColor = "#d1d1d1";
+                    nameInput.style.backgroundColor = "#d1d1d1";
+                }
+            }
+
+            // --- B. RENDER PRODUK & HITUNG SUB TOTAL ---
+            function initCheckout() {
+                if (productContainer) productContainer.innerHTML = "";
                 let subtotal = 0;
                 let totalItems = 0;
-        
-                // 2. Loop dan Render Produk
-                cart.forEach((item) => {
-                    const itemTotal = item.price * item.quantity;
-                    subtotal += itemTotal;
-                    totalItems += item.quantity;
-        
-                    productContainer.innerHTML += `
-                        <div style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
-                            <div class="product-title" style="font-weight:bold;">${item.name}</div>
-                            <div>Size: ${item.size}</div>
-                            <div>Quantity: ${item.quantity}</div>
-                            <div style="text-align:right; font-weight:bold;">Rp ${itemTotal.toLocaleString()}</div>
-                        </div>
-                    `;
-                });
-        
-                // 3. LOGIKA DISKON (Hanya satu kali kalkulasi)
-                let discountAmount = 0;
-        
-                // Cek apakah user login dan BUKAN guest
-                if (auth && auth.isLogin === true && auth.isGuest === false) {
-                    discountAmount = subtotal * 0.20; // Hitung 20%
-                    
-                    if (discountRow) {
-                        discountRow.style.display = "flex";
-                        discountAmountDisplay.textContent = "- Rp " + discountAmount.toLocaleString();
-                    }
+
+                if (cart.length > 0) {
+                    cart.forEach((item) => {
+                        const itemTotal = item.price * item.quantity;
+                        subtotal += itemTotal;
+                        totalItems += item.quantity;
+
+                        productContainer.innerHTML += `
+                            <div style="border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
+                                <div class="product-title">${item.name}</div>
+                                <div style="font-size:12px; color: #555;">Size: ${item.size} | Qty: ${item.quantity}</div>
+                                <div style="text-align:right; font-weight:bold;">Rp ${itemTotal.toLocaleString()}</div>
+                            </div>
+                        `;
+                    });
+
+                    // Set Subtotal awal
+                    subtotalLabel.textContent = `Subtotal * ${totalItems} items`;
+                    subtotalPriceDisplay.textContent = `Rp ${subtotal.toLocaleString()}`;
+
+                    // Panggil kalkulasi total (dengan shipping 0 diawal)
+                    calculateFinalTotal(0);
                 } else {
-                    if (discountRow) discountRow.style.display = "none";
+                    productContainer.innerHTML = "<p style='text-align:center;'>Your cart is empty.</p>";
                 }
-        
-                // 4. HITUNG TOTAL AKHIR (Subtotal dikurangi Diskon)
-                const finalTotal = subtotal - discountAmount;
-        
-                // 5. UPDATE TAMPILAN
-                if (subtotalLabel) subtotalLabel.textContent = `Subtotal * ${totalItems} items`;
-                if (subtotalPriceDisplay) subtotalPriceDisplay.textContent = `Rp ${subtotal.toLocaleString()}`;
-                if (totalPaymentDisplay) totalPaymentDisplay.textContent = `Rp ${finalTotal.toLocaleString()}`;
-        
-                // Debugging di Console (Tekan F12 untuk cek)
-                console.log("Member Login:", (auth && !auth.isGuest));
-                console.log("Subtotal:", subtotal);
-                console.log("Potongan Diskon:", discountAmount);
-                console.log("Total Harus Dibayar:", finalTotal);
-        
-            } else {
-                productContainer.innerHTML = "<p style='text-align:center; padding: 20px;'>Your cart is empty.</p>";
+            }
+
+            // --- C. LOGIKA KALKULASI TOTAL AKHIR ---
+            window.calculateFinalTotal = function (shippingCost = 0) {
+                let subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+                let discountAmount = 0;
+
+                // Hitung Diskon Member
+                if (auth && auth.isLogin && !auth.isGuest) {
+                    discountAmount = subtotal * 0.20;
+                    discountRow.style.display = "flex";
+                    discountAmountDisplay.textContent = "- Rp " + discountAmount.toLocaleString();
+                }
+
+                const finalTotal = subtotal - discountAmount + shippingCost;
+
+                // Update UI
+                if (shippingPriceDisplay) shippingPriceDisplay.textContent = `Rp ${shippingCost.toLocaleString()}`;
+                totalPaymentDisplay.textContent = `Rp ${finalTotal.toLocaleString()}`;
+            };
+
+            // --- D. EVENT LISTENERS ---
+
+            // Counter Karakter & Unlock Shipping
+            addressInput.addEventListener("input", function () {
+                const length = this.value.length;
+                charCount.textContent = `${length}/250`;
+
+                if (length > 10) {
+                    shippingPlaceholder.style.display = "none";
+                    shippingOptions.style.display = "block";
+                } else {
+                    shippingPlaceholder.style.display = "block";
+                    shippingOptions.style.display = "none";
+                    shippingSelect.value = "0"; // reset
+                    calculateFinalTotal(0);
+                }
+            });
+
+            // Pilih Shipping
+            shippingSelect.addEventListener("change", function () {
+                const cost = parseInt(this.value);
+                calculateFinalTotal(cost);
+            });
+
+            // Jalankan fungsi awal
+            initCheckout();
+
+            // --- E. FUNGSI PLACE ORDER & TAMPILKAN QRIS ---
+            const placeOrderBtn = document.getElementById("placeOrderBtn");
+            const qrisModal = document.getElementById("qrisModal");
+            const closeModal = document.getElementById("closeModal");
+
+            // 1. Tambahkan variabel global untuk menyimpan pilihan pembayaran
+            let selectedPaymentMethod = "";
+
+            // 2. Update fungsi selectPayment
+            window.selectPayment = function (element, method) {
+                document.querySelectorAll('.payment-option').forEach(opt => {
+                    opt.style.border = "none";
+                    opt.style.background = "#e5e5e5";
+                });
+                element.style.border = "2px solid #000";
+                element.style.background = "#d1d1d1";
+
+                selectedPaymentMethod = method; // Simpan pilihan (QRIS atau BANK_TRANSFER)
+            };
+
+            // 3. Update Event Listener Place Order
+            placeOrderBtn.addEventListener("click", function () {
+                const currentCart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+                const address = document.getElementById("addressInput").value;
+                const shipping = document.getElementById("shippingSelect").value;
+
+                // Validasi
+                if (currentCart.length === 0) { alert("Your cart is empty!"); return; }
+                if (address.length <= 10) { alert("Please provide a complete address."); return; }
+                if (shipping === "0") { alert("Please select a shipping method."); return; }
+                if (selectedPaymentMethod === "") { alert("Please select a payment method."); return; }
+
+                const rawTotal = document.getElementById("total-payment").textContent;
+                const totalValue = rawTotal.replace(/\D/g, "");
+                const generatedOrderId = "SB-" + Math.floor(Math.random() * 1000000);
+
+                if (selectedPaymentMethod === 'QRIS') {
+                    // Logika QRIS
+                    document.getElementById("modalTotalAmount").textContent = rawTotal;
+                    document.getElementById("orderId").textContent = generatedOrderId;
+                    const qrContent = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=QRIS_PAYMENT_${generatedOrderId}_${totalValue}`;
+                    document.getElementById("modalQrImage").src = qrContent;
+                    document.getElementById("qrisModal").style.display = "flex";
+                } else if (selectedPaymentMethod === 'BANK_TRANSFER') {
+                    // Logika Bank Transfer
+                    document.getElementById("bankTotalAmount").textContent = rawTotal;
+                    document.getElementById("bankModal").style.display = "flex";
+                }
+            });
+
+            // Fungsi untuk menutup modal secara manual
+            closeModal.onclick = function () {
+                qrisModal.style.display = "none";
+            }
+
+            // Fungsi setelah user menekan "I Have Paid"
+            window.finishOrder = function () {
+                // Menutup modal yang sedang terbuka (QRIS atau Bank)
+                document.getElementById("qrisModal").style.display = "none";
+                document.getElementById("bankModal").style.display = "none";
+
+                Swal.fire({
+                    title: 'Payment Confirmed!',
+                    text: 'Thank you! We have received your payment notification. Our team will verify it shortly.',
+                    icon: 'success',
+                    confirmButtonColor: '#000',
+                    confirmButtonText: 'Back to Home',
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Hapus keranjang
+                        localStorage.removeItem("shoppingCart");
+                        // Redirect ke halaman utama (ganti 'index.html' sesuai file Anda)
+                        window.location.href = 'index.html';
+                    }
+                });
             }
         });
-        </script>
+
+        // Fungsi Pilih Payment (Tetap diluar)
+        function selectPayment(element) {
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.style.border = "none";
+                opt.style.background = "#e5e5e5";
+            });
+            element.style.border = "2px solid #000";
+            element.style.background = "#d1d1d1";
+        }
+    </script>
 </body>
 
 </html>
